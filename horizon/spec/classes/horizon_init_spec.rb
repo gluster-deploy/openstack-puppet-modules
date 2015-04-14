@@ -97,7 +97,7 @@ describe 'horizon' do
           :neutron_options         => {'enable_lb' => true, 'enable_firewall' => true, 'enable_quotas' => false, 'enable_security_group' => false, 'enable_vpn' => true,
                                        'enable_distributed_router' => false, 'enable_ha_router' => false, 'profile_support' => 'cisco', },
           :file_upload_temp_dir    => '/var/spool/horizon',
-          :secure_cookies          => true
+          :secure_cookies          => true,
         })
       end
 
@@ -327,6 +327,12 @@ describe 'horizon' do
     end
 
     it_behaves_like 'horizon'
+
+    it 'sets WEBROOT in local_settings.py' do
+      verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        "WEBROOT = '/dashboard/'",
+      ])
+    end
   end
 
   context 'on Debian platforms' do
@@ -344,5 +350,11 @@ describe 'horizon' do
     end
 
     it_behaves_like 'horizon'
+
+    it 'sets WEBROOT in local_settings.py' do
+      verify_concat_fragment_contents(catalogue, 'local_settings.py', [
+        "WEBROOT = '/horizon/'",
+      ])
+    end
   end
 end
